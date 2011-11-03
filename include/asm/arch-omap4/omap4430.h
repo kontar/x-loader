@@ -127,6 +127,7 @@
 #define CORE_BANDGAP_COUNTER	(OMAP44XX_CORE_L4_IO_BASE + 0x237C)
 #define CORE_BANDGAP_CTRL	(OMAP44XX_CORE_L4_IO_BASE + 0x2378)
 #define CORE_TEMP_SENSOR	(OMAP44XX_CORE_L4_IO_BASE + 0x232C)
+#define CORE_TSHUT_THRESHOLD	(OMAP44XX_CORE_L4_IO_BASE + 0x2384)
 #define STD_FUSE_OPP_BGAP	(OMAP44XX_CORE_L4_IO_BASE + 0x2260)
 
 /* BANDGAP_COUNTER */
@@ -143,8 +144,10 @@
 #define BGAP_TEMP_SENSOR_EOCZ_MASK	(1 << 10)
 #define BGAP_TEMP_SENSOR_DTEMP_MASK	(0x3ff << 0)
 
-/* TSHUT high ADC code corrosponding to 123 degree celcius */
-#define TSHUT_HIGH_ADC_CODE		923
+/* TSHUT high ADC code corrosponding to 100 degree celcius */
+#define TSHUT_HIGH_ADC_CODE		866
+/* TSHUT cold ADC code corrosponding to 80 degree celcius */
+#define TSHUT_COLD_ADC_CODE		817
 
 /*
  * SDP4430 specific Section

@@ -38,6 +38,7 @@
 #include <asm/arch/bits.h>
 #include <asm/arch/clocks.h>
 #include <asm/arch/sys_proto.h>
+#include <asm/arch-omap4/mux.h>
 
 
 #ifdef CFG_PRINTF
@@ -193,6 +194,11 @@ void start_armboot (void)
 	omap4_rev = omap_revision();
 	if (omap4_rev >= OMAP4460_ES1_0) {
 		omap_temp_sensor_check();
+		if (omap4_rev == OMAP4470_ES1_0) {
+			writel(((TSHUT_HIGH_ADC_CODE << 16) |
+			TSHUT_COLD_ADC_CODE), CORE_TSHUT_THRESHOLD);
+			MV1(WK(CONTROL_SPARE_RW) , (M1));
+		}
 		si_type = omap4_silicon_type();
 		if (si_type == PROD_ID_1_SILICON_TYPE_HIGH_PERF)
 			printf("OMAP4460: 1.5 GHz capable SOM\n");
