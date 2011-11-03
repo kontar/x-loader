@@ -47,7 +47,6 @@ int board_init(void)
 }
 
 
-#define		OMAP44XX_WKUP_CTRL_BASE		0x4A31E000
 #if 1
 #define M0_SAFE M0
 #define M1_SAFE M1

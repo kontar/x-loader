@@ -405,7 +405,7 @@
 #define		MV(OFFSET, VALUE)\
 			__raw_writew((VALUE), OMAP44XX_CTRL_PADCONF_CORE_BASE + (OFFSET));
 #define		MV1(OFFSET, VALUE)\
-			__raw_writew((VALUE), OMAP44XX_WKUP_CTRL_BASE + (OFFSET));
+			__raw_writew((VALUE), OMAP44XX_CTRL_PADCONF_WKUP_BASE + (OFFSET));
 
 #define		CP(x)	(CONTROL_PADCONF_##x)
 #define		WK(x)	(CONTROL_WKUP_##x)

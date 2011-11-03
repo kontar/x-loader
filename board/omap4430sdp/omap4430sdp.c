@@ -47,7 +47,6 @@ int board_init(void)
 }
 
 
-#define		OMAP44XX_WKUP_CTRL_BASE		0x4A31E000 
 #if 1
 #define M0_SAFE M0
 #define M1_SAFE M1
@@ -324,7 +323,7 @@ void set_muxconf_regs(void)
 	 * gpio_wk7 is used for TPS controlling
 	 */
 	if (omap_revision() >= OMAP4460_ES1_0)
-		writew(M3, CONTROL_PADCONF_WKUP + CONTROL_WKUP_PAD1_FREF_CLK4_REQ);
+		writew(M3, OMAP44XX_CTRL_PADCONF_WKUP_BASE + CONTROL_WKUP_PAD1_FREF_CLK4_REQ);
 
 	return;
 }
