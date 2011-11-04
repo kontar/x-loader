@@ -255,17 +255,22 @@ static void scale_vcores(void)
 	__raw_writel(0x6026, 0x4A307BAC);
 
 	/* Enable 1.3V from TPS for vdd_mpu on 4460 */
-	if (rev >= OMAP4460_ES1_0) {
+	if (rev >= OMAP4460_ES1_0 && rev <= OMAP4460_MAX_REVISION) {
 		volt = 1300;
 		volt -= TPS62361_BASE_VOLT_MV;
 		volt /= 10;
 		do_scale_tps62361(TPS62361_REG_ADDR_SET1, volt);
 	}
 
+	/* VCOREx - power outputs of TWL6030 (OMAP4430/OMAP4460) */
+	/* SMPSx  - power outputs of TWL6032 (OMAP4470) */
 	/* set VCORE1 force VSEL */
-	/* PRM_VC_VAL_BYPASS) */
-	/* VCORE 1 - vdd_core on 4460 and vdd_mpu on 4430*/
-	if (rev >= OMAP4460_ES1_0)
+	/* PRM_VC_VAL_BYPASS */
+	/* VCORE 1 - vdd_core on 4460 and vdd_mpu on 4430 */
+	/* SMPS 1  - vdd_mpu on 4470 */
+	if (rev >= OMAP4470_ES1_0 && rev <= OMAP4470_MAX_REVISION)
+		__raw_writel(0x3A5512, 0x4A307BA0);
+	else if (rev >= OMAP4460_ES1_0 && rev <= OMAP4460_MAX_REVISION)
 		__raw_writel(0x305512, 0x4A307BA0);
 	else if(rev == OMAP4430_ES1_0)
 		__raw_writel(0x3B5512, 0x4A307BA0);
@@ -283,11 +288,14 @@ static void scale_vcores(void)
 
 
 	/* FIXME: set VCORE2 force VSEL, Check the reset value */
-	/* PRM_VC_VAL_BYPASS) */
-	/* VCORE 2 - vdd_iva on both 4430/4460 */
+	/* PRM_VC_VAL_BYPASS */
+	/* VCORE 2 - vdd_iva on 4430/4460 */
+	/* SMPS 2  - vdd_core on 4470 */
 	if(rev == OMAP4430_ES1_0)
 		__raw_writel(0x315B12, 0x4A307BA0);
-	else if (rev >= OMAP4460_ES1_0)
+	else if (rev >= OMAP4470_ES1_0 && rev <= OMAP4470_MAX_REVISION)
+		__raw_writel(0x305B12, 0x4A307BA0);
+	else if (rev >= OMAP4460_ES1_0 && rev <= OMAP4460_MAX_REVISION)
 		__raw_writel(0x305B12, 0x4A307BA0);
 	else
 		__raw_writel(0x295B12, 0x4A307BA0);
@@ -299,9 +307,23 @@ static void scale_vcores(void)
 	/* PRM_IRQSTATUS_MPU */
 	__raw_writel(__raw_readl(0x4A306010), 0x4A306010);
 
-	/*/set VCORE3 force VSEL */
+	/* set SMPS5 force VSEL */
 	/* PRM_VC_VAL_BYPASS */
-	/* VCORE 3 - vdd_core on 4430, none for 4460 */
+	/* SMPS5 - vdd_iva on 4470, none for 4430/4460 */
+	if (rev >= OMAP4470_ES1_0 && rev <= OMAP4470_MAX_REVISION) {
+		__raw_writel(0x304912, 0x4A307BA0);
+		/* set Valid bit in PRM_VC_VAL_BYPASS */
+		__raw_writel(__raw_readl(0x4A307BA0) | 0x1000000, 0x4A307BA0);
+		/* wait the acknowledge back from the SMPS */
+		while(__raw_readl(0x4A307BA0) & 0x1000000)
+			;
+		/* Reset irq status bits in  PRM_IRQSTATUS_MPU_A9 */
+		__raw_writel(__raw_readl(0x4A306010), 0x4A306010);
+	}
+
+	/* set VCORE3 force VSEL */
+	/* PRM_VC_VAL_BYPASS */
+	/* VCORE 3 - vdd_core on 4430, none for 4460/4470 */
 	if (rev >= OMAP4460_ES1_0)
 		return;
 	else if(rev == OMAP4430_ES1_0)
