@@ -203,6 +203,24 @@ struct dpll_param core_dpll_param_ddr400[7] = {
 	{0x7d, 0x05, 0x01, 0x05, 0x08, 0x04, 0x06, 0x05},
 };
 
+/* CORE parameters */
+struct dpll_param core_dpll_param_ddr466[7] = {
+	/* 12M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 13M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 16.8M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 19.2M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 26M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 27M values */
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	/* 38.4M values - DDR@466MHz*/
+	{0x36B, 0x23, 0x01, 0x06, 0x08, 0x04, 0x07, 0x05},
+};
+
 /* CORE parameters for L3 at 190 MHz - For ES1 only*/
 struct dpll_param core_dpll_param_l3_190[7] = {
 	/* 12M values */
@@ -527,6 +545,11 @@ void configure_core_dpll_no_lock(void)
 	wait_on_value(BIT0, 0, CM_IDLEST_DPLL_CORE, LDELAY);
 
 	/* Program Core DPLL */
+#ifdef CORE_233MHZ
+	if (omap_revision() >= OMAP4470_ES1_0)
+		dpll_param_p = &core_dpll_param_ddr466[clk_index];
+	else
+#endif
 	if(omap_revision() == OMAP4430_ES1_0)
 		dpll_param_p = &core_dpll_param_l3_190[clk_index];
 	else if (omap_revision() == OMAP4430_ES2_0)
@@ -591,6 +614,11 @@ void lock_core_dpll_shadow(void)
 
 	clk_index = 6;
 
+#ifdef CORE_233MHZ
+	if (omap_revision() >= OMAP4470_ES1_0)
+		dpll_param_p = &core_dpll_param_ddr466[clk_index];
+	else
+#endif
 	if(omap_revision() == OMAP4430_ES1_0)
 		dpll_param_p = &core_dpll_param_l3_190[clk_index];
 	else if (omap_revision() == OMAP4430_ES2_0)
