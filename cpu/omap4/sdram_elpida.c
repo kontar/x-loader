@@ -75,6 +75,32 @@ const struct ddr_regs ddr_regs_elpida2G_400_mhz_2cs_omap4460 = {
 	.mr2		= 0x4
 };
 
+const struct ddr_regs ddr_regs_elpida4G_400_mhz_1cs = {
+	.tim1		= 0x10eb0662,
+	.tim2		= 0x20370dd2,
+	.tim3		= 0x00b1c33f,
+	.phy_ctrl_1	= 0x449FF408,
+	.ref_ctrl	= 0x00000618,
+	.config_init	= 0x80800eb2,
+	.config_final	= 0x80801ab2,
+	.zq_config	= 0xd00b3215,
+	.mr1		= 0x83,
+	.mr2		= 0x4
+};
+
+const struct ddr_regs ddr_regs_elpida4G_466_mhz_1cs = {
+	.tim1		= 0x130F376B,
+	.tim2		= 0x3041105A,
+	.tim3		= 0x00F543CF,
+	.phy_ctrl_1	= 0x449FF408,
+	.ref_ctrl	= 0x0000071B,
+	.config_init	= 0x80800eb2,
+	.config_final	= 0x80801ab2,
+	.zq_config	= 0xd00b3215,
+	.mr1		= 0x83,
+	.mr2		= 0x4
+};
+
 const struct ddr_regs ddr_regs_elpida2G_380_mhz = {
 	.tim1		= 0x10cb061a,
 	.tim2		= 0x20350d52,
@@ -126,8 +152,14 @@ void __ddr_init(void)
 		ddr_regs = &ddr_regs_elpida2G_200_mhz_2cs;
 	else if (rev >= OMAP4430_ES2_1 && rev < OMAP4460_ES1_0)
 		ddr_regs = &ddr_regs_elpida2G_400_mhz_2cs;
-	else if (rev >= OMAP4460_ES1_0)
+	else if (rev >= OMAP4460_ES1_0 && rev < OMAP4470_ES1_0)
 		ddr_regs = &ddr_regs_elpida2G_400_mhz_2cs_omap4460;
+	else if (rev >= OMAP4470_ES1_0)
+#ifdef CORE_233MHZ
+		ddr_regs = &ddr_regs_elpida4G_466_mhz_1cs;
+#else
+		ddr_regs = &ddr_regs_elpida4G_400_mhz_1cs;
+#endif
 	/*
 	 * DMM Configuration:
 	 * ES1.0 - 512 MB
