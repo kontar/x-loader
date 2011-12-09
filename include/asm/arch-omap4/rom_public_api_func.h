@@ -26,13 +26,13 @@
 #include <asm/io.h>
 #include <asm/arch/omap4430.h>
 
-/* Publi ROM code API base addres changes bewteen OMAP44xx families, so in
+/* Public ROM code API base addres changes bewteen OMAP44xx families, so in
  * order to use common code, we use following trick to determine base address
- * HAWKEYE for OMAP443x is Bx5x while OMAP446x is Bx4x
+ * HAWKEYE for OMAP4430 is Bx5x while OMAP4460 is Bx4x and OMAP4470 is Bx7x
  */
 #define PUBLIC_API_BASE ( \
-  ((readl(CONTROL_ID_CODE)>>12) & 0x00F0)== 0x0040 ? \
-  0x00030400 : 0x00028400 )
+  ((readl(CONTROL_ID_CODE)>>12) & 0x00F0) == 0x0050 ? \
+  0x00028400 : 0x00030400)
 
 #define PUBLIC_API_SEC_ENTRY                            (0x00)
 
